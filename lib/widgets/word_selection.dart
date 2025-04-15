@@ -29,39 +29,70 @@ class WordSelection extends StatelessWidget {
         Wrap(
           spacing: AppConstants.smallPadding,
           runSpacing: AppConstants.smallPadding,
-          children: words.map((word) {
-            final isSelected = selectedWords.contains(word);
-            return _buildWordChip(word, isSelected);
-          }).toList(),
+          children: _buildWordChips(),
         ),
       ],
     );
   }
 
-  Widget _buildWordChip(String word, bool isSelected) {
+  List<Widget> _buildWordChips() {
+    // 単語ごとの出現回数と選択回数を追跡
+    final Map<String, int> wordOccurrences = {};
+    final Map<String, int> wordSelections = {};
+    
+    // 単語の出現回数をカウント
+    for (final word in words) {
+      wordOccurrences[word] = (wordOccurrences[word] ?? 0) + 1;
+    }
+    
+    // 選択された単語の回数をカウント
+    for (final word in selectedWords) {
+      wordSelections[word] = (wordSelections[word] ?? 0) + 1;
+    }
+    
+    // 単語チップのリストを作成
+    final List<Widget> chips = [];
+    for (final word in words) {
+      final int occurrences = wordOccurrences[word] ?? 0;
+      final int selections = wordSelections[word] ?? 0;
+      
+      // 選択可能かどうか（選択回数が出現回数より少ない場合は選択可能）
+      final bool canBeSelected = selections < occurrences;
+      
+      // 完全に選択済みかどうか（選択回数が出現回数と同じ場合）
+      final bool fullySelected = selections == occurrences;
+      
+      chips.add(_buildWordChip(word, fullySelected, canBeSelected));
+    }
+    
+    return chips;
+  }
+
+  Widget _buildWordChip(String word, bool fullySelected, bool canBeSelected) {
     return ActionChip(
       label: Text(
         word,
         style: TextStyle(
-          color: isSelected ? Colors.grey : AppConstants.textColor,
-          decoration: isSelected ? TextDecoration.lineThrough : null,
+          color: fullySelected ? Colors.grey : AppConstants.textColor,
         ),
       ),
-      backgroundColor: isSelected
+      backgroundColor: fullySelected
           ? AppConstants.disabledColor.withOpacity(0.3)
           : AppConstants.backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         side: BorderSide(
-          color: isSelected
+          color: fullySelected
               ? AppConstants.disabledColor
               : AppConstants.primaryColor,
         ),
       ),
       onPressed: () {
-        if (isSelected) {
+        if (selectedWords.contains(word) && !canBeSelected) {
+          // 選択済みの単語をタップした場合は削除
           onWordRemoved(word);
-        } else {
+        } else if (canBeSelected) {
+          // 選択可能な単語をタップした場合は追加
           onWordSelected(word);
         }
       },

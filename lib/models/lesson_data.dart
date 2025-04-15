@@ -10,8 +10,7 @@ class LessonData {
         id: 'elision_1',
         text: "I can't believe it.",
         translation: '信じられない。',
-        words: ['I', 'can\'t', 'believe', 'it'],
-        distractors: ['don\'t', 'won\'t', 'am', 'can'],
+        distractors: ["don't", "won't", 'am', 'can'],
         audioPath: 'audio/elision_1.mp3',
         pronunciationText: "I can' believe it.", // Tの脱落
         explanations: [
@@ -24,12 +23,11 @@ class LessonData {
       ),
       ExampleSentence(
         id: 'elision_2',
-        text: 'Don\'t forget to call me.',
+        text: "Don't forget to call me.",
         translation: '電話するのを忘れないで。',
-        words: ['Don\'t', 'forget', 'to', 'call', 'me'],
         distractors: ['remember', 'try', 'want', 'need'],
         audioPath: 'audio/elision_2.mp3',
-        pronunciationText: 'Don\' forget to call me.', // Tの脱落
+        pronunciationText: "Don' forget to call me.", // Tの脱落
         explanations: [
           ExplanationItem(
             key: "don't",
@@ -42,12 +40,11 @@ class LessonData {
       // Flap Tの例文
       ExampleSentence(
         id: 'flap_t_1',
-        text: 'What a beautiful city.',
+        text: "What a beautiful city.",
         translation: 'なんて美しい街なんだ。',
-        words: ['What', 'a', 'beautiful', 'city'],
         distractors: ['nice', 'great', 'wonderful', 'amazing'],
         audioPath: 'audio/flap_t_1.mp3',
-        pronunciationText: 'Whada beautiful city.', // Flap T
+        pronunciationText: "Whada beautiful city.", // Flap T
         explanations: [
           ExplanationItem(
             key: "what a",
@@ -58,12 +55,11 @@ class LessonData {
       ),
       ExampleSentence(
         id: 'flap_t_2',
-        text: 'I need to get a better computer.',
+        text: "I need to get a better computer.",
         translation: 'もっといいコンピュータが必要だ。',
-        words: ['I', 'need', 'to', 'get', 'a', 'better', 'computer'],
         distractors: ['want', 'have', 'buy', 'use'],
         audioPath: 'audio/flap_t_2.mp3',
-        pronunciationText: 'I need da geda bedder computer.', // Flap T
+        pronunciationText: "I need da geda bedder computer.", // Flap T
         explanations: [
           ExplanationItem(
             key: "need to",
@@ -84,12 +80,11 @@ class LessonData {
       // リンキング（Linking）の例文
       ExampleSentence(
         id: 'linking_1',
-        text: 'Turn it off.',
+        text: "Turn it off.",
         translation: 'それを消して。',
-        words: ['Turn', 'it', 'off'],
         distractors: ['on', 'up', 'down', 'over'],
         audioPath: 'audio/linking_1.mp3',
-        pronunciationText: 'Tur-ni-toff.', // リンキング
+        pronunciationText: "Tur-ni-toff.", // リンキング
         explanations: [
           ExplanationItem(
             key: "turn it",
@@ -104,12 +99,11 @@ class LessonData {
       ),
       ExampleSentence(
         id: 'linking_2',
-        text: 'Come and see me.',
+        text: "Come and see me.",
         translation: '来て会いに来て。',
-        words: ['Come', 'and', 'see', 'me'],
         distractors: ['go', 'visit', 'meet', 'find'],
         audioPath: 'audio/linking_2.mp3',
-        pronunciationText: 'Co-man-see-me.', // リンキング
+        pronunciationText: "Co-man-see-me.", // リンキング
         explanations: [
           ExplanationItem(
             key: "come and",
@@ -130,12 +124,11 @@ class LessonData {
       // リダクション（Reduction）の例文
       ExampleSentence(
         id: 'reduction_1',
-        text: 'What do you want to do?',
+        text: "What do you want to do?",
         translation: '何がしたいの？',
-        words: ['What', 'do', 'you', 'want', 'to', 'do'],
         distractors: ['need', 'like', 'can', 'will'],
         audioPath: 'audio/reduction_1.mp3',
-        pronunciationText: 'Whaddaya wanna do?', // リダクション
+        pronunciationText: "Whaddaya wanna do?", // リダクション
         explanations: [
           ExplanationItem(
             key: "what do you",
@@ -150,12 +143,11 @@ class LessonData {
       ),
       ExampleSentence(
         id: 'reduction_2',
-        text: 'I have to go now.',
+        text: "I have to go now.",
         translation: '今行かなければならない。',
-        words: ['I', 'have', 'to', 'go', 'now'],
         distractors: ['want', 'need', 'must', 'should'],
         audioPath: 'audio/reduction_2.mp3',
-        pronunciationText: 'I hafta go now.', // リダクション
+        pronunciationText: "I hafta go now.", // リダクション
         explanations: [
           ExplanationItem(
             key: "have to",
@@ -166,9 +158,8 @@ class LessonData {
             content: "✔ 「could have」は会話では「クダ」みたいに聞こえます。\n「have」の部分はほとんど聞こえず、全体で「クダ（/kʊɾə/）」と発音されます。",
           ),
         ],
-        level: 1,
+        level: 5,
       ),
-      // TODO: 追加の例文を必要に応じて追加
     ];
     
     // レベル順にソート（低い方が簡単、簡単なものが最初に来る）

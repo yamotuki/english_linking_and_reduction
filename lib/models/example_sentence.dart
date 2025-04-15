@@ -3,7 +3,6 @@ class ExampleSentence {
   final String id;
   final String text;
   final String translation;
-  final List<String> words;
   final List<String> distractors; // 紛らわしい選択肢
   final String audioPath;
   final String? pronunciationText; // 発音用テキスト（TTSに渡すための文章）
@@ -14,13 +13,19 @@ class ExampleSentence {
     required this.id,
     required this.text,
     required this.translation,
-    required this.words,
     required this.distractors,
     required this.audioPath,
     this.pronunciationText,
     this.explanations,
     required this.level,
   });
+
+  /// テキストから単語リストを生成
+  List<String> get words {
+    // 句読点を削除し、スペースで分割
+    final cleanText = text.replaceAll(RegExp(r'[.,!?]'), '');
+    return cleanText.split(' ');
+  }
 }
 
 /// 解説項目モデル

@@ -90,7 +90,8 @@ function parseArgs() {
 function parseExampleSentences(dartCode) {
   const examples = [];
   // 正規表現を更新して pronunciationText も取得
-  const regex = /ExampleSentence\(\s*id:\s*'([^']+)',\s*text:\s*'([^']+)'[\s\S]*?(?:pronunciationText:\s*'([^']+)',|audioPath:\s*'[^']+',)/gs;
+  // シングルクォートとダブルクォートの両方に対応
+  const regex = /ExampleSentence\(\s*id:\s*['"]([^'"]+)['"]\s*,\s*text:\s*["']([^"']+)["'][\s\S]*?(?:pronunciationText:\s*["']([^"']+)["']|audioPath:\s*['"][^'"]+['"])/gs;
   
   let match;
   while ((match = regex.exec(dartCode)) !== null) {

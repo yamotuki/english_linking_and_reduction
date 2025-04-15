@@ -1,0 +1,112 @@
+# English Linking & Reduction アプリ設計ルール
+
+## 1. ファイル構成
+
+### 1.1 ディレクトリ構造
+```
+lib/
+  ├── main.dart              # アプリのエントリーポイント
+  ├── models/                # データモデル
+  │   ├── example_sentence.dart  # 例文モデル
+  │   └── lesson_data.dart       # レッスンデータ
+  ├── screens/               # 画面
+  │   ├── lesson_selection_screen.dart  # レッスン選択画面
+  │   └── practice_screen.dart          # 練習画面
+  ├── utils/                 # ユーティリティ
+  │   ├── audio_player_util.dart  # 音声再生ユーティリティ
+  │   ├── constants.dart          # 定数
+  │   └── local_storage.dart      # ローカルストレージ
+  └── widgets/               # ウィジェット
+      ├── action_buttons.dart       # アクションボタン
+      ├── example_section.dart      # 例文セクション
+      ├── pronunciation_buttons.dart # 発音ボタン
+      ├── result_section.dart       # 結果セクション
+      ├── sentence_builder.dart     # 文章構築
+      ├── translation_section.dart  # 翻訳セクション
+      └── word_selection.dart       # 単語選択
+```
+
+### 1.2 ファイル命名規則
+- スネークケース（snake_case）を使用する
+- 画面は `_screen.dart` で終わる
+- ウィジェットは機能を表す名前にする
+- モデルは対応するデータ構造を表す名前にする
+
+## 2. コーディング規約
+
+### 2.1 一般的なルール
+- 1つのファイルは200行を超えないようにする
+- 1つのクラスは1つの責務を持つようにする
+- 1つのメソッドは1つのタスクを実行するようにする
+- コメントは日本語で記述する
+
+### 2.2 ウィジェット設計
+- StatefulWidget と StatelessWidget を適切に使い分ける
+- 状態管理が必要なものは StatefulWidget を使用
+- 表示のみのものは StatelessWidget を使用
+- ウィジェットは再利用可能なように設計する
+- 大きなウィジェットは小さなウィジェットに分割する
+
+### 2.3 状態管理
+- 状態はできるだけ局所的に管理する
+- 複数のウィジェット間で共有する状態は上位のウィジェットで管理する
+- コールバック関数を使って子ウィジェットから親ウィジェットに状態変更を通知する
+
+## 3. モデル設計
+
+### 3.1 ExampleSentence モデル
+- `id`: 例文の一意の識別子
+- `text`: 例文のテキスト
+- `translation`: 例文の日本語訳
+- `distractors`: 紛らわしい選択肢
+- `audioPath`: 音声ファイルのパス
+- `pronunciationText`: 発音用テキスト
+- `explanations`: 解説項目のリスト
+- `level`: 難易度レベル。並び順に利用される。
+
+## 4. 画面設計
+
+### 4.1 LessonSelectionScreen
+- 例文の一覧を表示する
+- 各例文の状態（未回答、正解、不正解）を表示する
+- 例文をタップすると PracticeScreen に遷移する
+
+### 4.2 PracticeScreen
+- 例文を表示する
+- 単語を選択して文章を組み立てる
+- 回答を確認する
+- 結果を表示する
+- 次の例文に移動する
+
+## 5. ウィジェット設計
+
+### 5.1 責務の分離
+- `ExampleSection`: 例文の表示
+- `TranslationSection`: 翻訳の表示と切り替え
+- `SentenceBuilder`: 選択した単語の表示と並べ替え
+- `WordSelection`: 単語の選択
+- `ActionButtons`: アクションボタンの表示
+- `ResultSection`: 結果の表示
+- `PronunciationButtons`: 発音ボタンの表示
+
+### 5.2 再利用可能なコンポーネント
+- ボタン、テキスト表示、コンテナなどは再利用可能なコンポーネントとして設計する
+- スタイルは `AppConstants` で一元管理する
+
+## 6. データ管理
+
+### 6.1 ローカルストレージ
+- SharedPreferences を使用して回答状態を保存する
+- 回答状態は `answered_examples` キーで保存する
+- 回答状態は Map<String, String> 形式で、キーが例文ID、値が回答状態
+
+### 6.2 音声再生
+- AudioPlayer を使用して音声を再生する
+- シングルトンパターンを使用して AudioPlayer インスタンスを管理する
+
+## 8. 音声生成スクリプト
+
+### 8.1 generate_audio.js
+- OpenAI の音声生成 API を使用して例文の音声を生成する
+- シングルクォートとダブルクォートの両方に対応する正規表現を使用する
+- pronunciationText が存在する場合はそれを使用し、なければ text を使用する
