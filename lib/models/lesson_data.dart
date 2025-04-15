@@ -52,11 +52,11 @@ class LessonData {
     return [
       ExampleSentence(
         id: 'elision_1',
-        text: 'I can\'t believe it.',
+        text: "I can't believe it.",
         translation: '信じられない。',
         words: ['I', 'can\'t', 'believe', 'it'],
         distractors: ['don\'t', 'won\'t', 'am', 'can'],
-        audioPath: 'assets/audio/elision_1.mp3',
+        audioPath: 'audio/elision_1.mp3',
       ),
       ExampleSentence(
         id: 'elision_2',
@@ -64,7 +64,7 @@ class LessonData {
         translation: '電話するのを忘れないで。',
         words: ['Don\'t', 'forget', 'to', 'call', 'me'],
         distractors: ['remember', 'try', 'want', 'need'],
-        audioPath: 'assets/audio/elision_2.mp3',
+        audioPath: 'audio/elision_2.mp3',
       ),
       // TODO: 追加の例文を6つ程度追加
     ];
@@ -79,7 +79,7 @@ class LessonData {
         translation: 'なんて美しい街なんだ。',
         words: ['What', 'a', 'beautiful', 'city'],
         distractors: ['nice', 'great', 'wonderful', 'amazing'],
-        audioPath: 'assets/audio/flap_t_1.mp3',
+        audioPath: 'audio/flap_t_1.mp3',
       ),
       ExampleSentence(
         id: 'flap_t_2',
@@ -87,7 +87,7 @@ class LessonData {
         translation: 'もっといいコンピュータが必要だ。',
         words: ['I', 'need', 'to', 'get', 'a', 'better', 'computer'],
         distractors: ['want', 'have', 'buy', 'use'],
-        audioPath: 'assets/audio/flap_t_2.mp3',
+        audioPath: 'audio/flap_t_2.mp3',
       ),
       // TODO: 追加の例文を6つ程度追加
     ];
@@ -102,7 +102,7 @@ class LessonData {
         translation: 'それを消して。',
         words: ['Turn', 'it', 'off'],
         distractors: ['on', 'up', 'down', 'over'],
-        audioPath: 'assets/audio/linking_1.mp3',
+        audioPath: 'audio/linking_1.mp3',
       ),
       ExampleSentence(
         id: 'linking_2',
@@ -110,7 +110,7 @@ class LessonData {
         translation: '来て会いに来て。',
         words: ['Come', 'and', 'see', 'me'],
         distractors: ['go', 'visit', 'meet', 'find'],
-        audioPath: 'assets/audio/linking_2.mp3',
+        audioPath: 'audio/linking_2.mp3',
       ),
       // TODO: 追加の例文を6つ程度追加
     ];
@@ -125,7 +125,7 @@ class LessonData {
         translation: '何がしたいの？',
         words: ['What', 'do', 'you', 'want', 'to', 'do'],
         distractors: ['need', 'like', 'can', 'will'],
-        audioPath: 'assets/audio/reduction_1.mp3',
+        audioPath: 'audio/reduction_1.mp3',
       ),
       ExampleSentence(
         id: 'reduction_2',
@@ -133,7 +133,7 @@ class LessonData {
         translation: '今行かなければならない。',
         words: ['I', 'have', 'to', 'go', 'now'],
         distractors: ['want', 'need', 'must', 'should'],
-        audioPath: 'assets/audio/reduction_2.mp3',
+        audioPath: 'audio/reduction_2.mp3',
       ),
       // TODO: 追加の例文を6つ程度追加
     ];
