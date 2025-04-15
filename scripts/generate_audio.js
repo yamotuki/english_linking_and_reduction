@@ -89,13 +89,15 @@ function parseArgs() {
 // 例文データの解析
 function parseExampleSentences(dartCode) {
   const examples = [];
-  const regex = /ExampleSentence\(\s*id:\s*'([^']+)',\s*text:\s*'([^']+)'/gs;
+  // 正規表現を更新して pronunciationText も取得
+  const regex = /ExampleSentence\(\s*id:\s*'([^']+)',\s*text:\s*'([^']+)'[\s\S]*?(?:pronunciationText:\s*'([^']+)',|audioPath:\s*'[^']+',)/gs;
   
   let match;
   while ((match = regex.exec(dartCode)) !== null) {
     examples.push({
       id: match[1],
       text: match[2],
+      pronunciationText: match[3] || null, // pronunciationText が存在しない場合は null
     });
   }
   
@@ -103,7 +105,9 @@ function parseExampleSentences(dartCode) {
 }
 
 // OpenAI API を使用して音声を生成
-async function generateAudio(text, options, outputPath) {
+async function generateAudio(example, options, outputPath) {
+  // pronunciationText が存在する場合はそれを使用、なければ text を使用
+  const text = example.pronunciationText || example.text;
   return new Promise((resolve, reject) => {
     // API リクエストのデータ
     const voiceInstructions = CONFIG.voices.instructions || '';
@@ -213,15 +217,18 @@ async function main() {
 
     console.log(`${targetExamples.length} 件の例文を処理します。`);
 
-    // 各例文に対して音声を生成
-    for (const example of targetExamples) {
-      const outputPath = path.join(CONFIG.paths.audio, `${example.id}.mp3`);
-      
-      console.log(`例文 "${example.id}" の音声を生成中...`);
-      console.log(`テキスト: ${example.text}`);
-      
-      await generateAudio(example.text, options, outputPath);
-    }
+      // 各例文に対して音声を生成
+      for (const example of targetExamples) {
+        const outputPath = path.join(CONFIG.paths.audio, `${example.id}.mp3`);
+        
+        console.log(`例文 "${example.id}" の音声を生成中...`);
+        console.log(`表示テキスト: ${example.text}`);
+        if (example.pronunciationText) {
+          console.log(`発音テキスト: ${example.pronunciationText}`);
+        }
+        
+        await generateAudio(example, options, outputPath);
+      }
 
     console.log('音声生成が完了しました。');
   } catch (error) {

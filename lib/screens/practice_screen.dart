@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/example_sentence.dart';
-import '../models/lesson.dart';
-import '../models/lesson_data.dart';
 import '../utils/constants.dart';
+import '../utils/local_storage.dart';
 import '../widgets/pronunciation_buttons.dart';
 import '../widgets/sentence_builder.dart';
 import '../widgets/word_selection.dart';
 
 /// 練習画面
 class PracticeScreen extends StatefulWidget {
-  final LessonType lessonType;
+  final ExampleSentence exampleSentence;
 
   const PracticeScreen({
     super.key,
-    required this.lessonType,
+    required this.exampleSentence,
   });
 
   @override
@@ -21,22 +20,14 @@ class PracticeScreen extends StatefulWidget {
 }
 
 class _PracticeScreenState extends State<PracticeScreen> {
-  late List<ExampleSentence> _exampleSentences;
-  int _currentIndex = 0;
   List<String> _selectedWords = [];
   bool _showTranslation = false;
   bool _showResult = false;
   bool _isCorrect = false;
 
   @override
-  void initState() {
-    super.initState();
-    _exampleSentences = LessonData.getExampleSentences(widget.lessonType);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentSentence = _exampleSentences[_currentIndex];
+    final currentSentence = widget.exampleSentence;
     final allWords = [
       ...currentSentence.words,
       ...currentSentence.distractors,
@@ -44,7 +35,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('練習: ${_getLessonTitle()}'),
+        title: const Text('例文練習'),
         backgroundColor: AppConstants.primaryColor,
       ),
       body: SingleChildScrollView(
@@ -52,8 +43,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProgressIndicator(),
-            const SizedBox(height: AppConstants.defaultPadding),
             _buildExampleSection(currentSentence),
             const SizedBox(height: AppConstants.defaultPadding),
             _buildTranslationSection(currentSentence),
@@ -82,32 +71,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     );
   }
 
-  String _getLessonTitle() {
-    final lessons = LessonData.getLessons();
-    final lesson = lessons.firstWhere((l) => l.type == widget.lessonType);
-    return lesson.title;
-  }
-
-  Widget _buildProgressIndicator() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '例文 ${_currentIndex + 1}/${_exampleSentences.length}',
-          style: AppConstants.captionStyle,
-        ),
-        const SizedBox(height: AppConstants.smallPadding),
-        LinearProgressIndicator(
-          value: (_currentIndex + 1) / _exampleSentences.length,
-          backgroundColor: AppConstants.disabledColor.withOpacity(0.3),
-          valueColor: const AlwaysStoppedAnimation<Color>(AppConstants.primaryColor),
-        ),
-      ],
-    );
-  }
-
   Widget _buildExampleSection(ExampleSentence sentence) {
-    // マスクされた例文を表示（TODO: マスク機能の実装）
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -251,46 +215,113 @@ class _PracticeScreenState extends State<PracticeScreen> {
           ),
         ],
         const SizedBox(height: AppConstants.defaultPadding),
+        
+        // 文章表現と口語表現
+        const Text(
+          '文章表現:',
+          style: AppConstants.titleStyle,
+        ),
+        const SizedBox(height: AppConstants.smallPadding),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppConstants.defaultPadding),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+            border: Border.all(color: AppConstants.primaryColor.withOpacity(0.3)),
+          ),
+          child: Text(
+            sentence.text,
+            style: AppConstants.bodyStyle,
+          ),
+        ),
+        const SizedBox(height: AppConstants.defaultPadding),
+        
+        if (sentence.pronunciationText != null) ...[
+          const Text(
+            '口語表現:',
+            style: AppConstants.titleStyle,
+          ),
+          const SizedBox(height: AppConstants.smallPadding),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+              border: Border.all(color: AppConstants.primaryColor.withOpacity(0.3)),
+            ),
+            child: Text(
+              sentence.pronunciationText!,
+              style: AppConstants.bodyStyle,
+            ),
+          ),
+          const SizedBox(height: AppConstants.defaultPadding),
+        ],
+        
+        // 解説
+        if (sentence.explanations != null && sentence.explanations!.isNotEmpty) ...[
+          const Text(
+            '解説:',
+            style: AppConstants.titleStyle,
+          ),
+          const SizedBox(height: AppConstants.smallPadding),
+          ...sentence.explanations!.map((explanation) => _buildExplanationItem(explanation)),
+          const SizedBox(height: AppConstants.defaultPadding),
+        ],
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_currentIndex < _exampleSentences.length - 1)
-              ElevatedButton(
-                onPressed: _goToNextSentence,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstants.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.defaultPadding,
-                    vertical: AppConstants.smallPadding,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-                  ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppConstants.primaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.defaultPadding,
+                  vertical: AppConstants.smallPadding,
                 ),
-                child: const Text('次の例文へ'),
-              )
-            else
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstants.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.defaultPadding,
-                    vertical: AppConstants.smallPadding,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
                 ),
-                child: const Text('レッスン選択に戻る'),
               ),
+              child: const Text('例文一覧に戻る'),
+            ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildExplanationItem(ExplanationItem explanation) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: AppConstants.smallPadding),
+      padding: const EdgeInsets.all(AppConstants.defaultPadding),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+        border: Border.all(color: AppConstants.primaryColor.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '【${explanation.key}】',
+            style: AppConstants.bodyStyle.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: AppConstants.smallPadding),
+          Text(
+            explanation.content,
+            style: AppConstants.bodyStyle,
+          ),
+        ],
+      ),
     );
   }
 
@@ -316,8 +347,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
     });
   }
 
-  void _checkAnswer() {
-    final currentSentence = _exampleSentences[_currentIndex];
+  Future<void> _checkAnswer() async {
+    final currentSentence = widget.exampleSentence;
     final correctWords = currentSentence.words;
     
     // 単語数が一致しているか確認
@@ -326,6 +357,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
         _showResult = true;
         _isCorrect = false;
       });
+      
+      // 不正解として記録
+      await LocalStorage.markExampleAsIncorrectlyAnswered(currentSentence.id);
       return;
     }
     
@@ -342,14 +376,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
       _showResult = true;
       _isCorrect = isCorrect;
     });
-  }
-
-  void _goToNextSentence() {
-    setState(() {
-      _currentIndex++;
-      _selectedWords = [];
-      _showTranslation = false;
-      _showResult = false;
-    });
+    
+    // 回答状態を保存
+    if (isCorrect) {
+      await LocalStorage.markExampleAsCorrectlyAnswered(currentSentence.id);
+    } else {
+      await LocalStorage.markExampleAsIncorrectlyAnswered(currentSentence.id);
+    }
   }
 }

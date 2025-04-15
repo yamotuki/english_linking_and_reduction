@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'screens/lesson_selection_screen.dart';
 import 'utils/constants.dart';
 
-void main() {
+void main() async {
+  // Flutterプラグインを初期化
+  WidgetsFlutterBinding.ensureInitialized();
+  
   runApp(const MyApp());
 }
 
