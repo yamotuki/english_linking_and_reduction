@@ -48,17 +48,18 @@ class SentenceBuilder extends StatelessWidget {
               : Wrap(
                   spacing: AppConstants.smallPadding,
                   runSpacing: AppConstants.smallPadding,
-                  children: selectedWords.map((word) => _buildWordItem(word)).toList(),
+                  children: List.generate(selectedWords.length, (index) {
+                    return _buildWordItem(selectedWords[index], index);
+                  }),
                 ),
         ),
       ],
     );
   }
 
-  Widget _buildWordItem(String word) {
-    // 同じ単語でも一意のキーを生成するために、現在のタイムスタンプを使用
+  Widget _buildWordItem(String word, int index) {
     return Container(
-      key: ValueKey('${word}_${DateTime.now().microsecondsSinceEpoch}'),
+      key: ValueKey('word_$index'),
       decoration: BoxDecoration(
         color: AppConstants.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
