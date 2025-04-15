@@ -36,6 +36,7 @@ class SentenceBuilder extends StatelessWidget {
           ),
           constraints: const BoxConstraints(
             minHeight: 120, // 2行分のスペースを確保
+            minWidth: double.infinity, // 横幅を最大に確保
           ),
           child: selectedWords.isEmpty
               ? const Center(
@@ -55,8 +56,9 @@ class SentenceBuilder extends StatelessWidget {
   }
 
   Widget _buildWordItem(String word) {
+    // 同じ単語でも一意のキーを生成するために、現在のタイムスタンプを使用
     return Container(
-      key: ValueKey(word),
+      key: ValueKey('${word}_${DateTime.now().microsecondsSinceEpoch}'),
       decoration: BoxDecoration(
         color: AppConstants.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
